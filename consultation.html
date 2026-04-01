@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultation Request</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <main>
+      <div class="back-wrap">
+        <a class="btn btn-secondary btn-link" href="index.html">Back to profile</a>
+      </div>
+
+      <div class="consult-layout">
+        <aside>
+          <div class="card sidebar-card dark">
+            <span class="small-label">Consultation request</span>
+            <h2>Questionnaire for new clients</h2>
+            <p class="lead-text">A structured intake form for embedded and control-system projects.</p>
+
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div>Choose the project core platform.</div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div>Select the engineering task.</div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div>Add the technical explanation.</div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div>Book a preferred date and time.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card sidebar-card sidebar-spacing">
+            <h3 class="sidebar-title">Example explanation</h3>
+            <p class="hint">
+              I have a DC motor, and I want to send position commands with CAN communication. I need help with the
+              architecture, control logic, and embedded implementation.
+            </p>
+          </div>
+        </aside>
+
+        <section class="card form-card" aria-labelledby="consultTitle">
+          <form id="consultForm">
+            <h2 id="consultTitle">Questionnaire &amp; booking</h2>
+            <p class="hint">Fill the details below so the consultation can focus on the correct technical scope.</p>
+
+            <div class="field-grid top-spacing">
+              <div>
+                <label for="fullName">Full name</label>
+                <input id="fullName" name="fullName" placeholder="Your full name" required />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div class="full">
+                <label for="company">Company or project name</label>
+                <input id="company" name="company" placeholder="Company, startup, or project name" />
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="group-title">
+                <label>1. Which is the project core?</label>
+              </div>
+              <div class="chips" id="coreChips">
+                <button type="button" class="chip" data-value="Linux">Linux</button>
+                <button type="button" class="chip" data-value="STM">STM</button>
+                <button type="button" class="chip" data-value="NXP">NXP</button>
+                <button type="button" class="chip" data-value="ESP">ESP</button>
+                <button type="button" class="chip" data-value="BeagleBone">BeagleBone</button>
+                <button type="button" class="chip" data-value="Raspberry Pi">Raspberry Pi</button>
+                <button type="button" class="chip" data-value="Other">Other</button>
+              </div>
+              <input type="hidden" id="projectCore" name="projectCore" required />
+            </div>
+
+            <div class="group">
+              <label for="projectType">2. What is the project about?</label>
+              <select id="projectType" name="projectType" required>
+                <option value="">Select the main project topic</option>
+                <option>Control motor (DC, AC, stepper, servo)</option>
+                <option>Making Linux driver</option>
+                <option>Adding new extension (sensor, camera, etc)</option>
+                <option>Add new communication (Modbus, CAN, UART, etc)</option>
+                <option>RTOS application design</option>
+                <option>Industrial automation software</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="group">
+              <div class="group-title">
+                <label>3. Communication or interface involved</label>
+              </div>
+              <div class="chips" id="commChips">
+                <button type="button" class="chip" data-value="CAN">CAN</button>
+                <button type="button" class="chip" data-value="Modbus">Modbus</button>
+                <button type="button" class="chip" data-value="UART">UART</button>
+                <button type="button" class="chip" data-value="SPI">SPI</button>
+                <button type="button" class="chip" data-value="I2C">I2C</button>
+                <button type="button" class="chip" data-value="Ethernet">Ethernet</button>
+                <button type="button" class="chip" data-value="USB">USB</button>
+              </div>
+              <input type="hidden" id="communication" name="communication" />
+            </div>
+
+            <div class="group">
+              <label for="explanation">4. Give more explanation about your project</label>
+              <textarea
+                id="explanation"
+                name="explanation"
+                placeholder="Example: I have a DC motor, which I want to control with CAN communication. I need help with architecture, implementation, and debugging."
+                required
+              ></textarea>
+            </div>
+
+            <div class="group">
+              <div class="group-title">
+                <label>5. Take the appointment time and day</label>
+              </div>
+              <div class="booking-grid">
+                <div class="booking-box">
+                  <div class="booking-title">Choose date</div>
+                  <div class="slot-list" id="dateSlots">
+                    <button type="button" class="slot" data-date="Monday">Monday</button>
+                    <button type="button" class="slot" data-date="Tuesday">Tuesday</button>
+                    <button type="button" class="slot" data-date="Wednesday">Wednesday</button>
+                    <button type="button" class="slot" data-date="Thursday">Thursday</button>
+                  </div>
+                  <input type="hidden" id="appointmentDate" name="appointmentDate" required />
+                </div>
+                <div class="booking-box">
+                  <div class="booking-title">Available time</div>
+                  <div class="slot-grid" id="timeSlots"></div>
+                  <input type="hidden" id="appointmentTime" name="appointmentTime" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="submit-row">
+              <button class="btn btn-primary" type="submit">Submit consultation request</button>
+            </div>
+          </form>
+
+          <div id="successBox" class="success hidden">
+            <div class="success-icon">&#10003;</div>
+            <h2>Request received</h2>
+            <p class="hint success-copy">
+              The consultation request has been captured with the selected project scope and preferred appointment
+              slot.
+            </p>
+
+            <div class="summary">
+              <div class="summary-grid">
+                <div>
+                  <div class="summary-label">Client</div>
+                  <div class="summary-value" id="sumName"></div>
+                </div>
+                <div>
+                  <div class="summary-label">Project core</div>
+                  <div class="summary-value" id="sumCore"></div>
+                </div>
+                <div>
+                  <div class="summary-label">Project topic</div>
+                  <div class="summary-value" id="sumType"></div>
+                </div>
+                <div>
+                  <div class="summary-label">Appointment</div>
+                  <div class="summary-value" id="sumAppointment"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="success-actions">
+              <a class="btn btn-primary btn-link" href="index.html">Go home</a>
+              <button class="btn btn-secondary" type="button" id="resetRequestButton">Create another request</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

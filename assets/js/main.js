@@ -2,9 +2,6 @@ import { createBookingController } from "./booking.js";
 import { createSingleSelectChips, createMultiSelectChips } from "./chips.js";
 import { DATE_TIMES } from "./data.js";
 import { createConsultationFormController } from "./form.js";
-import { createPageNavigator } from "./navigation.js";
-
-const navigator = createPageNavigator();
 
 const elements = {
   form: document.getElementById("consultForm"),
@@ -24,6 +21,10 @@ const elements = {
     appointment: document.getElementById("sumAppointment")
   }
 };
+
+if (!elements.form) {
+  throw new Error("Consultation form was not found on the page.");
+}
 
 const projectCoreChips = createSingleSelectChips({
   groupSelector: "#coreChips",
@@ -55,11 +56,9 @@ const consultationForm = createConsultationFormController({
     () => projectCoreChips.reset(),
     () => communicationChips.reset(),
     () => booking.reset()
-  ],
-  navigateTo: navigator.showPage
+  ]
 });
 
-navigator.bindPageButtons();
 projectCoreChips.bind();
 communicationChips.bind();
 booking.bindDateSlots();

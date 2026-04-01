@@ -7,8 +7,7 @@ export function createConsultationFormController({
   projectTypeInput,
   fullNameInput,
   summaryFields,
-  resetHandlers,
-  navigateTo
+  resetHandlers
 }) {
   function validateForm() {
     if (!projectCoreInput.value) {
@@ -56,7 +55,6 @@ export function createConsultationFormController({
     form.reset();
     showFormState();
     resetHandlers.forEach((handler) => handler());
-    navigateTo("consultPage");
   }
 
   function bind() {
