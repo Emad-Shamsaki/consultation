@@ -55,6 +55,42 @@ That command reads `package.json` and `package-lock.json` and recreates `node_mo
 3. Open:
    `http://localhost:3000`
 
+## Troubleshooting
+
+If you see this error:
+
+`Error: listen EADDRINUSE: address already in use :::3000`
+
+it means port `3000` is already being used by another process.
+
+The number in a command like:
+
+`taskkill /PID 24600 /F`
+
+is the `PID` (process ID). It is the Windows ID of the program currently using the port.
+This number can change every time, so first find the correct PID, then stop it.
+
+To find which PID is using port `3000`, run:
+
+`netstat -ano | findstr :3000`
+
+The last number on the `LISTENING` line is the PID.
+
+To see which program that PID belongs to, run:
+
+`tasklist /FI "PID eq 24600"`
+
+You can fix it in one of these ways:
+
+1. Stop the process using port `3000`:
+   `taskkill /PID <PID> /F`
+2. Or change the port in `.env`, for example:
+   `PORT=3001`
+
+Then start again with:
+
+`npm.cmd start`
+
 ## Notes
 
 - Do not open `consultation.html` directly by double-clicking it anymore. Use the local server instead.
