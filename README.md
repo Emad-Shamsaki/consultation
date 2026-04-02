@@ -1,17 +1,23 @@
 # Consultation Site
 
-## What changed
+This project is now a static website.
+You can host it on GitHub Pages or any simple static hosting service and connect your own domain without running a backend server.
 
-- Clients can choose the timezone they want to see before selecting a slot.
-- Available dates are converted on the server from the consultant timezone in `assets/data/availability.json`.
-- Every submitted appointment sends an email notification to the consultant.
+## How booking emails work now
 
-## Edit availability
+The booking form uses Formspree.
+Formspree receives the form submission and sends the email for you, so you do not need Node.js, SMTP, or a local server.
 
-Update `assets/data/availability.json`.
+## Files you will edit
 
-- `sourceTimezone` is the consultant timezone used as the base schedule.
-- Each `date` and `timeSlots` entry is interpreted in that timezone.
+### 1. Consultant schedule
+
+Edit:
+`assets/data/availability.json`
+
+- `sourceTimezone` is your own timezone.
+- Every `date` and `timeSlots` value is interpreted in that timezone.
+- The website converts those times in the browser to the client's selected timezone.
 
 Example:
 
@@ -27,71 +33,96 @@ Example:
 }
 ```
 
-## Email setup
+### 2. Email form endpoint
 
-1. Copy `.env.example` to `.env`.
-2. Fill in your SMTP settings.
-3. Set `APPOINTMENT_NOTIFICATION_EMAIL` to the email address where you want booking notifications.
+Edit:
+`assets/data/site-config.json`
 
-## node_modules
+Replace:
 
-`node_modules` was created by running:
+```json
+{
+  "formEndpoint": "https://formspree.io/f/your-form-id"
+}
+```
 
-`npm.cmd install`
+with your real Formspree endpoint.
 
-You do not need to copy the `node_modules` folder to another PC.
-On another computer, open this project folder and run:
+Example:
 
-`npm.cmd install`
+```json
+{
+  "formEndpoint": "https://formspree.io/f/abcdexyz"
+}
+```
 
-That command reads `package.json` and `package-lock.json` and recreates `node_modules` automatically.
+## Formspree setup
 
-## Run locally
+1. Go to `https://formspree.io/`
+2. Create an account.
+3. Create a new form.
+4. Copy your form endpoint.
+   It looks like:
+   `https://formspree.io/f/abcdexyz`
+5. Paste that endpoint into:
+   `assets/data/site-config.json`
 
-1. Install dependencies:
-   `npm.cmd install`
-2. Start the server:
-   `npm.cmd start`
-3. Open:
-   `http://localhost:3000`
+After that, submitted consultations will be sent to the email connected to your Formspree form.
 
-## Troubleshooting
+## Local preview
 
-If you see this error:
+Because the site reads JSON files, do not preview it by double-clicking the HTML file.
+Use a simple static preview server instead.
 
-`Error: listen EADDRINUSE: address already in use :::3000`
+Examples:
 
-it means port `3000` is already being used by another process.
+### Option 1: VS Code Live Server
 
-The number in a command like:
+Open the folder in VS Code and start Live Server.
 
-`taskkill /PID 24600 /F`
+### Option 2: Python
 
-is the `PID` (process ID). It is the Windows ID of the program currently using the port.
-This number can change every time, so first find the correct PID, then stop it.
+If Python is installed:
 
-To find which PID is using port `3000`, run:
+```powershell
+python -m http.server 8080
+```
 
-`netstat -ano | findstr :3000`
+Then open:
 
-The last number on the `LISTENING` line is the PID.
+`http://localhost:8080`
 
-To see which program that PID belongs to, run:
+This is only for previewing locally.
+It is not a backend server for production.
 
-`tasklist /FI "PID eq 24600"`
+## Deploy to GitHub Pages
 
-You can fix it in one of these ways:
+1. Create a GitHub repository.
+2. Upload this project.
+3. In GitHub, open:
+   `Settings > Pages`
+4. Under `Build and deployment`, choose:
+   `Deploy from a branch`
+5. Select your main branch and the root folder.
+6. Save.
 
-1. Stop the process using port `3000`:
-   `taskkill /PID <PID> /F`
-2. Or change the port in `.env`, for example:
-   `PORT=3001`
+GitHub Pages will give you a site URL.
 
-Then start again with:
+## Use your own domain
 
-`npm.cmd start`
+After GitHub Pages is working:
+
+1. Buy a domain from any registrar.
+2. In your GitHub repository, open:
+   `Settings > Pages`
+3. Add your custom domain there.
+4. Update your domain DNS records at your registrar using the values GitHub Pages shows.
+
+GitHub custom domain documentation:
+https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site/about-custom-domains-and-github-pages
 
 ## Notes
 
-- Do not open `consultation.html` directly by double-clicking it anymore. Use the local server instead.
-- The email uses the client's selected timezone and also includes the consultant timezone for clarity.
+- No Node.js backend is required anymore.
+- `.env` and SMTP settings are no longer used by this version.
+- If the form says it cannot send, first check `assets/data/site-config.json` and confirm your Formspree endpoint is correct.

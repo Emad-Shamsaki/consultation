@@ -1,36 +1,15 @@
 import { createBookingController } from "./booking.js";
 import { createSingleSelectChips, createMultiSelectChips } from "./chips.js";
 import { createConsultationFormController } from "./form.js";
+import {
+  convertAvailabilityToTimezone,
+  formatAppointmentDisplay,
+  getBrowserTimezone,
+  getTimezoneOptions
+} from "./timezone.js";
 
-const TIMEZONE_FALLBACKS = [
-  "UTC",
-  "Europe/Rome",
-  "Europe/London",
-  "Europe/Berlin",
-  "Europe/Paris",
-  "America/New_York",
-  "America/Chicago",
-  "America/Denver",
-  "America/Los_Angeles",
-  "America/Sao_Paulo",
-  "Asia/Dubai",
-  "Asia/Kolkata",
-  "Asia/Singapore",
-  "Asia/Tokyo",
-  "Australia/Sydney"
-];
-
-function getBrowserTimezone() {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-}
-
-function getTimezoneOptions() {
-  if (typeof Intl.supportedValuesOf === "function") {
-    return Intl.supportedValuesOf("timeZone");
-  }
-
-  return TIMEZONE_FALLBACKS;
-}
+const availabilityUrl = new URL("../data/availability.json", import.meta.url);
+const siteConfigUrl = new URL("../data/site-config.json", import.meta.url);
 
 function populateTimezoneSelect(selectElement) {
   const browserTimezone = getBrowserTimezone();
@@ -45,10 +24,12 @@ function populateTimezoneSelect(selectElement) {
     option.selected = timezone === browserTimezone;
     selectElement.appendChild(option);
   });
+
+  return browserTimezone;
 }
 
-async function requestJson(url, options = {}) {
-  const response = await fetch(url, options);
+async function requestJson(url) {
+  const response = await fetch(url);
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok) {
@@ -58,18 +39,64 @@ async function requestJson(url, options = {}) {
   return payload;
 }
 
-async function loadAvailability(timezone) {
-  return requestJson(`/api/availability?timezone=${encodeURIComponent(timezone)}`);
+async function loadAvailabilityConfig() {
+  return requestJson(availabilityUrl);
 }
 
-async function sendAppointment(payload) {
-  return requestJson("/api/appointments", {
+async function loadSiteConfig() {
+  return requestJson(siteConfigUrl);
+}
+
+function isPlaceholderEndpoint(endpoint) {
+  return !endpoint || endpoint.includes("your-form-id");
+}
+
+async function sendAppointment(payload, siteConfig, availabilityConfig) {
+  if (isPlaceholderEndpoint(siteConfig.formEndpoint)) {
+    throw new Error(
+      "Set your Formspree endpoint in assets/data/site-config.json before publishing the form."
+    );
+  }
+
+  const formData = new FormData();
+  formData.append("name", payload.fullName);
+  formData.append("email", payload.email);
+  formData.append("_replyto", payload.email);
+  formData.append("_subject", `New consultation request from ${payload.fullName}`);
+  formData.append("company", payload.company || "Not provided");
+  formData.append("projectCore", payload.projectCore);
+  formData.append("projectType", payload.projectType);
+  formData.append("communication", payload.communication || "Not provided");
+  formData.append("explanation", payload.explanation);
+  formData.append("clientTimezone", payload.clientTimezone);
+  formData.append(
+    "clientAppointment",
+    `${payload.appointmentDate} at ${payload.appointmentTime} (${payload.clientTimezone})`
+  );
+  formData.append("appointmentUtc", payload.appointmentStartsAt);
+  formData.append("consultantTimezone", availabilityConfig.sourceTimezone || "UTC");
+
+  const response = await fetch(siteConfig.formEndpoint, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      Accept: "application/json"
     },
-    body: JSON.stringify(payload)
+    body: formData
   });
+
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const errorMessage = result.errors?.[0]?.message || result.error || `Request failed with status ${response.status}.`;
+    throw new Error(errorMessage);
+  }
+
+  return {
+    appointment: {
+      clientDisplay: formatAppointmentDisplay(payload.appointmentStartsAt, payload.clientTimezone),
+      selectedTimezone: payload.clientTimezone
+    }
+  };
 }
 
 async function initializeConsultationPage() {
@@ -102,7 +129,11 @@ async function initializeConsultationPage() {
     throw new Error("Consultation form was not found on the page.");
   }
 
-  populateTimezoneSelect(elements.clientTimezoneInput);
+  const defaultTimezone = populateTimezoneSelect(elements.clientTimezoneInput);
+  const [availabilityConfig, siteConfig] = await Promise.all([
+    loadAvailabilityConfig(),
+    loadSiteConfig()
+  ]);
 
   const projectCoreChips = createSingleSelectChips({
     groupSelector: "#coreChips",
@@ -124,14 +155,17 @@ async function initializeConsultationPage() {
   });
 
   async function refreshAvailability() {
-    booking.showLoadError("Loading available appointment slots...");
-
     try {
-      const availability = await loadAvailability(elements.clientTimezoneInput.value);
-      booking.updateAvailability(availability);
+      const convertedAvailability = convertAvailabilityToTimezone(
+        availabilityConfig,
+        elements.clientTimezoneInput.value
+      );
+      booking.updateAvailability(convertedAvailability);
     } catch (error) {
       console.error(error);
-      booking.showLoadError(error.message || "Could not load appointment slots.");
+      booking.showLoadError(
+        "Could not load appointment slots. Open the site through GitHub Pages or a static host instead of double-clicking the file."
+      );
     }
   }
 
@@ -151,11 +185,14 @@ async function initializeConsultationPage() {
     resetHandlers: [
       () => projectCoreChips.reset(),
       () => communicationChips.reset(),
-      () => booking.reset(),
-      () => refreshAvailability()
+      () => {
+        elements.clientTimezoneInput.value = defaultTimezone;
+        booking.reset();
+        return refreshAvailability();
+      }
     ],
     statusElement: elements.formStatus,
-    submitAppointment: sendAppointment
+    submitAppointment: (payload) => sendAppointment(payload, siteConfig, availabilityConfig)
   });
 
   projectCoreChips.bind();
@@ -166,4 +203,12 @@ async function initializeConsultationPage() {
   await refreshAvailability();
 }
 
-initializeConsultationPage();
+initializeConsultationPage().catch((error) => {
+  console.error(error);
+
+  const scheduleInfo = document.getElementById("scheduleInfo");
+  if (scheduleInfo) {
+    scheduleInfo.textContent =
+      "Could not load the booking settings. Check assets/data/site-config.json and host the site on GitHub Pages or another static host.";
+  }
+});
