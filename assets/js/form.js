@@ -4,30 +4,50 @@ export function createConsultationFormController({
   projectCoreInput,
   appointmentDateInput,
   appointmentTimeInput,
+  appointmentStartsAtInput,
+  clientTimezoneInput,
   projectTypeInput,
   fullNameInput,
   summaryFields,
-  resetHandlers
+  resetHandlers,
+  statusElement,
+  submitAppointment
 }) {
+  function setStatus(message, type = "info") {
+    statusElement.textContent = message;
+    statusElement.className = `form-status form-status-${type}`;
+  }
+
+  function clearStatus() {
+    statusElement.textContent = "";
+    statusElement.className = "form-status hidden";
+  }
+
   function validateForm() {
     if (!projectCoreInput.value) {
-      alert("Please choose the project core.");
+      setStatus("Please choose the project core.", "error");
       return false;
     }
 
-    if (!appointmentDateInput.value || !appointmentTimeInput.value) {
-      alert("Please choose appointment day and time.");
+    if (!clientTimezoneInput.value) {
+      setStatus("Please choose the timezone for the appointment.", "error");
+      return false;
+    }
+
+    if (!appointmentDateInput.value || !appointmentTimeInput.value || !appointmentStartsAtInput.value) {
+      setStatus("Please choose appointment day and time.", "error");
       return false;
     }
 
     return true;
   }
 
-  function fillSummary() {
+  function fillSummary(result) {
     summaryFields.name.textContent = fullNameInput.value || "Not provided";
     summaryFields.core.textContent = projectCoreInput.value || "Not selected";
     summaryFields.type.textContent = projectTypeInput.value || "Not selected";
-    summaryFields.appointment.textContent = `${appointmentDateInput.value} at ${appointmentTimeInput.value}`;
+    summaryFields.appointment.textContent = result.appointment.clientDisplay;
+    summaryFields.timezone.textContent = result.appointment.selectedTimezone || clientTimezoneInput.value;
   }
 
   function showSuccessState() {
@@ -40,19 +60,31 @@ export function createConsultationFormController({
     successBox.classList.add("hidden");
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    clearStatus();
 
     if (!validateForm()) {
       return;
     }
 
-    fillSummary();
-    showSuccessState();
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      setStatus("Sending your appointment request...", "info");
+      const result = await submitAppointment(payload);
+      fillSummary(result);
+      clearStatus();
+      showSuccessState();
+    } catch (error) {
+      setStatus(error.message || "Could not send the appointment request.", "error");
+    }
   }
 
   function reset() {
     form.reset();
+    clearStatus();
     showFormState();
     resetHandlers.forEach((handler) => handler());
   }

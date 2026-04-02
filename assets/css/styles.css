@@ -635,3 +635,28 @@ textarea {
     width: min(100% - 18px, 1180px);
   }
 }
+
+.booking-message {
+  margin-top: 0;
+}
+
+.timezone-note {
+  margin-top: 10px;
+}
+
+.form-status {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.form-status-info {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.form-status-error {
+  background: #fee2e2;
+  color: #b91c1c;
+}

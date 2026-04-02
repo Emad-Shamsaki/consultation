@@ -1,52 +1,61 @@
-function createTimeButton(time, onSelect) {
+function createTimeButton(slot, onSelect) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "slot";
-  button.textContent = time;
-  button.addEventListener("click", () => onSelect(button, time));
+  button.textContent = slot.displayTime;
+  button.addEventListener("click", () => onSelect(button, slot));
   return button;
 }
 
-function createDateButton(appointment, onSelect) {
+function createDateButton(dateGroup, onSelect) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "slot";
-  button.dataset.date = appointment.date;
-  button.dataset.label = appointment.label;
-  button.textContent = appointment.label;
-  button.addEventListener("click", () => onSelect(button, appointment));
+  button.dataset.dateKey = dateGroup.dateKey;
+  button.textContent = dateGroup.label;
+  button.addEventListener("click", () => onSelect(button, dateGroup));
   return button;
 }
 
 export function createBookingController({
-  availableDates,
   dateSlots,
+  timeSlots,
+  scheduleInfo,
   appointmentDateInput,
   appointmentTimeInput,
-  timeSlots
+  appointmentStartsAtInput
 }) {
-  const appointmentsByDate = new Map(
-    availableDates.map((appointment) => [appointment.date, appointment])
-  );
+  let availableDates = [];
+  let sourceTimezone = "UTC";
+  let selectedTimezone = "UTC";
 
   function clearSelectedTime() {
     appointmentTimeInput.value = "";
+    appointmentStartsAtInput.value = "";
     timeSlots.innerHTML = "";
   }
 
-  function renderTimes(date) {
-    const appointment = appointmentsByDate.get(date);
-    const times = appointment?.timeSlots || [];
+  function renderScheduleInfo(message) {
+    scheduleInfo.textContent = message;
+  }
+
+  function renderTimes(dateKey) {
+    const dateGroup = availableDates.find((item) => item.dateKey === dateKey);
     clearSelectedTime();
 
-    times.forEach((time) => {
-      const button = createTimeButton(time, (selectedButton, selectedTime) => {
-        timeSlots.querySelectorAll(".slot").forEach((slot) => {
-          slot.classList.remove("active");
+    if (!dateGroup) {
+      return;
+    }
+
+    dateGroup.timeSlots.forEach((slot) => {
+      const button = createTimeButton(slot, (selectedButton, selectedSlot) => {
+        timeSlots.querySelectorAll(".slot").forEach((timeButton) => {
+          timeButton.classList.remove("active");
         });
 
         selectedButton.classList.add("active");
-        appointmentTimeInput.value = selectedTime;
+        appointmentTimeInput.value = selectedSlot.displayTime;
+        appointmentStartsAtInput.value = selectedSlot.startsAt;
       });
 
       timeSlots.appendChild(button);
@@ -56,15 +65,15 @@ export function createBookingController({
   function renderDateSlots() {
     dateSlots.innerHTML = "";
 
-    availableDates.forEach((appointment) => {
-      const button = createDateButton(appointment, (selectedButton, selectedAppointment) => {
-        dateSlots.querySelectorAll(".slot").forEach((slot) => {
-          slot.classList.remove("active");
+    availableDates.forEach((dateGroup) => {
+      const button = createDateButton(dateGroup, (selectedButton, selectedDate) => {
+        dateSlots.querySelectorAll(".slot").forEach((dateButton) => {
+          dateButton.classList.remove("active");
         });
 
         selectedButton.classList.add("active");
-        appointmentDateInput.value = selectedAppointment.label;
-        renderTimes(selectedAppointment.date);
+        appointmentDateInput.value = selectedDate.label;
+        renderTimes(selectedDate.dateKey);
       });
 
       dateSlots.appendChild(button);
@@ -73,30 +82,53 @@ export function createBookingController({
 
   function showLoadError(message) {
     dateSlots.innerHTML = `<p class="hint booking-message">${message}</p>`;
-    clearSelectedTime();
+    timeSlots.innerHTML = "";
+    appointmentDateInput.value = "";
+    appointmentTimeInput.value = "";
+    appointmentStartsAtInput.value = "";
+    renderScheduleInfo(message);
   }
 
-  function init() {
+  function updateAvailability({
+    availableDates: nextAvailableDates,
+    sourceTimezone: nextSourceTimezone,
+    selectedTimezone: nextSelectedTimezone
+  }) {
+    availableDates = nextAvailableDates;
+    sourceTimezone = nextSourceTimezone;
+    selectedTimezone = nextSelectedTimezone;
+    appointmentDateInput.value = "";
+    clearSelectedTime();
+
     if (!availableDates.length) {
-      showLoadError("No available dates are currently configured.");
+      showLoadError("No available dates are currently configured for this timezone.");
       return;
     }
 
     renderDateSlots();
+    renderScheduleInfo(
+      `Times below are shown in ${selectedTimezone}. Consultant availability is managed in ${sourceTimezone}.`
+    );
   }
 
   function reset() {
     appointmentDateInput.value = "";
     clearSelectedTime();
 
-    dateSlots.querySelectorAll(".slot").forEach((slot) => {
-      slot.classList.remove("active");
+    dateSlots.querySelectorAll(".slot").forEach((dateButton) => {
+      dateButton.classList.remove("active");
     });
+
+    if (availableDates.length) {
+      renderScheduleInfo(
+        `Times below are shown in ${selectedTimezone}. Consultant availability is managed in ${sourceTimezone}.`
+      );
+    }
   }
 
   return {
-    init,
     reset,
-    showLoadError
+    showLoadError,
+    updateAvailability
   };
 }

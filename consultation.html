@@ -35,6 +35,10 @@
               </div>
               <div class="step">
                 <div class="step-num">4</div>
+                <div>Choose the timezone the client should see.</div>
+              </div>
+              <div class="step">
+                <div class="step-num">5</div>
                 <div>Book a preferred date and time.</div>
               </div>
             </div>
@@ -126,8 +130,16 @@
             </div>
 
             <div class="group">
+              <label for="clientTimezone">5. What timezone should the appointment be shown in?</label>
+              <select id="clientTimezone" name="clientTimezone" required></select>
+              <p class="hint timezone-note" id="scheduleInfo">
+                Appointment times will be shown in the timezone selected above.
+              </p>
+            </div>
+
+            <div class="group">
               <div class="group-title">
-                <label>5. Take the appointment time and day</label>
+                <label>6. Take the appointment time and day</label>
               </div>
               <div class="booking-grid">
                 <div class="booking-box">
@@ -139,9 +151,12 @@
                   <div class="booking-title">Available time</div>
                   <div class="slot-grid" id="timeSlots"></div>
                   <input type="hidden" id="appointmentTime" name="appointmentTime" required />
+                  <input type="hidden" id="appointmentStartsAt" name="appointmentStartsAt" required />
                 </div>
               </div>
             </div>
+
+            <p id="formStatus" class="form-status hidden" role="status" aria-live="polite"></p>
 
             <div class="submit-row">
               <button class="btn btn-primary" type="submit">Submit consultation request</button>
@@ -152,8 +167,7 @@
             <div class="success-icon">&#10003;</div>
             <h2>Request received</h2>
             <p class="hint success-copy">
-              The consultation request has been captured with the selected project scope and preferred appointment
-              slot.
+              Your appointment request has been sent successfully, and an email notification has been delivered to the consultant.
             </p>
 
             <div class="summary">
@@ -173,6 +187,10 @@
                 <div>
                   <div class="summary-label">Appointment</div>
                   <div class="summary-value" id="sumAppointment"></div>
+                </div>
+                <div>
+                  <div class="summary-label">Timezone</div>
+                  <div class="summary-value" id="sumTimezone"></div>
                 </div>
               </div>
             </div>
