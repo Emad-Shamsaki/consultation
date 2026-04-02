@@ -1,0 +1,81 @@
+Create the `.env` file in your project root:
+
+[c:\Documents\consulation\.env](c:\Documents\consulation\.env)
+
+Fastest way in PowerShell:
+```powershell
+Copy-Item .env.example .env
+```
+
+Then open `.env` and fill it like this:
+```env
+PORT=3000
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-smtp-user
+SMTP_PASS=your-smtp-password
+MAIL_FROM=appointments@example.com
+APPOINTMENT_NOTIFICATION_EMAIL=your@email.com
+```
+
+What each value means:
+- `SMTP_HOST`: your email provider’s SMTP server
+- `SMTP_PORT`: usually `587` or `465`
+- `SMTP_SECURE`: `true` for port `465`, `false` for `587`
+- `SMTP_USER`: your email login
+- `SMTP_PASS`: your SMTP password or app password
+- `MAIL_FROM`: the sender address shown in the email
+- `APPOINTMENT_NOTIFICATION_EMAIL`: where you want to receive booking emails
+
+Where to create the credentials:
+- `Gmail`
+  - Go to your Google Account
+  - Turn on `2-Step Verification`
+  - Then create an `App Password`
+  - Use:
+    - `SMTP_HOST=smtp.gmail.com`
+    - `SMTP_PORT=587`
+    - `SMTP_SECURE=false`
+    - `SMTP_USER=yourgmail@gmail.com`
+    - `SMTP_PASS=your 16-character app password`
+- `Outlook / Microsoft 365`
+  - Use your mailbox login
+  - If your account uses MFA, create an app password if your tenant allows it
+  - Use:
+    - `SMTP_HOST=smtp.office365.com`
+    - `SMTP_PORT=587`
+    - `SMTP_SECURE=false`
+- `Custom domain email`
+  - Go to your email hosting provider dashboard
+  - Look for `SMTP settings`, `Mail client setup`, or `Outgoing server`
+  - Common providers: cPanel hosting, Zoho Mail, Namecheap Private Email, Hostinger, Bluehost
+
+Example for Gmail:
+```env
+PORT=3000
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=yourname@gmail.com
+SMTP_PASS=abcd efgh ijkl mnop
+MAIL_FROM=yourname@gmail.com
+APPOINTMENT_NOTIFICATION_EMAIL=yourname@gmail.com
+```
+
+After saving:
+```powershell
+npm.cmd start
+```
+
+Then open:
+```text
+http://localhost:3000
+```
+
+If you want, tell me which email provider you use:
+- Gmail
+- Outlook
+- custom domain email
+
+and I’ll give you the exact values to paste into `.env`.
