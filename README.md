@@ -33,6 +33,19 @@ Example:
 2. Fill in your SMTP settings.
 3. Set `APPOINTMENT_NOTIFICATION_EMAIL` to the email address where you want booking notifications.
 
+## node_modules
+
+`node_modules` was created by running:
+
+`npm.cmd install`
+
+You do not need to copy the `node_modules` folder to another PC.
+On another computer, open this project folder and run:
+
+`npm.cmd install`
+
+That command reads `package.json` and `package-lock.json` and recreates `node_modules` automatically.
+
 ## Run locally
 
 1. Install dependencies:
