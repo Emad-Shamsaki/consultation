@@ -1,67 +1,123 @@
 import { createBookingController } from "./booking.js";
 import { createSingleSelectChips, createMultiSelectChips } from "./chips.js";
-import { DATE_TIMES } from "./data.js";
 import { createConsultationFormController } from "./form.js";
 
-const elements = {
-  form: document.getElementById("consultForm"),
-  successBox: document.getElementById("successBox"),
-  projectCoreInput: document.getElementById("projectCore"),
-  communicationInput: document.getElementById("communication"),
-  appointmentDateInput: document.getElementById("appointmentDate"),
-  appointmentTimeInput: document.getElementById("appointmentTime"),
-  projectTypeInput: document.getElementById("projectType"),
-  fullNameInput: document.getElementById("fullName"),
-  timeSlots: document.getElementById("timeSlots"),
-  resetRequestButton: document.getElementById("resetRequestButton"),
-  summaryFields: {
-    name: document.getElementById("sumName"),
-    core: document.getElementById("sumCore"),
-    type: document.getElementById("sumType"),
-    appointment: document.getElementById("sumAppointment")
-  }
-};
+const AVAILABILITY_PATH = "./assets/data/availability.json";
 
-if (!elements.form) {
-  throw new Error("Consultation form was not found on the page.");
+async function loadAvailability() {
+  const response = await fetch(AVAILABILITY_PATH);
+
+  if (!response.ok) {
+    throw new Error(`Failed to load availability data: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.availableDates ?? [];
 }
 
-const projectCoreChips = createSingleSelectChips({
-  groupSelector: "#coreChips",
-  hiddenInput: elements.projectCoreInput
-});
+async function initializeConsultationPage() {
+  const elements = {
+    form: document.getElementById("consultForm"),
+    successBox: document.getElementById("successBox"),
+    projectCoreInput: document.getElementById("projectCore"),
+    communicationInput: document.getElementById("communication"),
+    appointmentDateInput: document.getElementById("appointmentDate"),
+    appointmentTimeInput: document.getElementById("appointmentTime"),
+    projectTypeInput: document.getElementById("projectType"),
+    fullNameInput: document.getElementById("fullName"),
+    dateSlots: document.getElementById("dateSlots"),
+    timeSlots: document.getElementById("timeSlots"),
+    resetRequestButton: document.getElementById("resetRequestButton"),
+    summaryFields: {
+      name: document.getElementById("sumName"),
+      core: document.getElementById("sumCore"),
+      type: document.getElementById("sumType"),
+      appointment: document.getElementById("sumAppointment")
+    }
+  };
 
-const communicationChips = createMultiSelectChips({
-  groupSelector: "#commChips",
-  hiddenInput: elements.communicationInput
-});
+  if (!elements.form) {
+    throw new Error("Consultation form was not found on the page.");
+  }
 
-const booking = createBookingController({
-  dateTimes: DATE_TIMES,
-  appointmentDateInput: elements.appointmentDateInput,
-  appointmentTimeInput: elements.appointmentTimeInput,
-  timeSlots: elements.timeSlots
-});
+  const projectCoreChips = createSingleSelectChips({
+    groupSelector: "#coreChips",
+    hiddenInput: elements.projectCoreInput
+  });
 
-const consultationForm = createConsultationFormController({
-  form: elements.form,
-  successBox: elements.successBox,
-  projectCoreInput: elements.projectCoreInput,
-  appointmentDateInput: elements.appointmentDateInput,
-  appointmentTimeInput: elements.appointmentTimeInput,
-  projectTypeInput: elements.projectTypeInput,
-  fullNameInput: elements.fullNameInput,
-  summaryFields: elements.summaryFields,
-  resetHandlers: [
-    () => projectCoreChips.reset(),
-    () => communicationChips.reset(),
-    () => booking.reset()
-  ]
-});
+  const communicationChips = createMultiSelectChips({
+    groupSelector: "#commChips",
+    hiddenInput: elements.communicationInput
+  });
 
-projectCoreChips.bind();
-communicationChips.bind();
-booking.bindDateSlots();
-consultationForm.bind();
+  const booking = createBookingController({
+    availableDates: [],
+    dateSlots: elements.dateSlots,
+    appointmentDateInput: elements.appointmentDateInput,
+    appointmentTimeInput: elements.appointmentTimeInput,
+    timeSlots: elements.timeSlots
+  });
 
-elements.resetRequestButton.addEventListener("click", consultationForm.reset);
+  try {
+    const availableDates = await loadAvailability();
+    const configuredBooking = createBookingController({
+      availableDates,
+      dateSlots: elements.dateSlots,
+      appointmentDateInput: elements.appointmentDateInput,
+      appointmentTimeInput: elements.appointmentTimeInput,
+      timeSlots: elements.timeSlots
+    });
+
+    configuredBooking.init();
+
+    const consultationForm = createConsultationFormController({
+      form: elements.form,
+      successBox: elements.successBox,
+      projectCoreInput: elements.projectCoreInput,
+      appointmentDateInput: elements.appointmentDateInput,
+      appointmentTimeInput: elements.appointmentTimeInput,
+      projectTypeInput: elements.projectTypeInput,
+      fullNameInput: elements.fullNameInput,
+      summaryFields: elements.summaryFields,
+      resetHandlers: [
+        () => projectCoreChips.reset(),
+        () => communicationChips.reset(),
+        () => configuredBooking.reset()
+      ]
+    });
+
+    projectCoreChips.bind();
+    communicationChips.bind();
+    consultationForm.bind();
+    elements.resetRequestButton.addEventListener("click", consultationForm.reset);
+    return;
+  } catch (error) {
+    console.error(error);
+    booking.showLoadError(
+      "Could not load availability.json. If you opened this page directly from your computer, use a local web server."
+    );
+  }
+
+  const consultationForm = createConsultationFormController({
+    form: elements.form,
+    successBox: elements.successBox,
+    projectCoreInput: elements.projectCoreInput,
+    appointmentDateInput: elements.appointmentDateInput,
+    appointmentTimeInput: elements.appointmentTimeInput,
+    projectTypeInput: elements.projectTypeInput,
+    fullNameInput: elements.fullNameInput,
+    summaryFields: elements.summaryFields,
+    resetHandlers: [
+      () => projectCoreChips.reset(),
+      () => communicationChips.reset(),
+      () => booking.reset()
+    ]
+  });
+
+  projectCoreChips.bind();
+  communicationChips.bind();
+  consultationForm.bind();
+  elements.resetRequestButton.addEventListener("click", consultationForm.reset);
+}
+
+initializeConsultationPage();

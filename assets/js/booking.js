@@ -7,14 +7,36 @@ function createTimeButton(time, onSelect) {
   return button;
 }
 
-export function createBookingController({ dateTimes, appointmentDateInput, appointmentTimeInput, timeSlots }) {
+function createDateButton(appointment, onSelect) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "slot";
+  button.dataset.date = appointment.date;
+  button.dataset.label = appointment.label;
+  button.textContent = appointment.label;
+  button.addEventListener("click", () => onSelect(button, appointment));
+  return button;
+}
+
+export function createBookingController({
+  availableDates,
+  dateSlots,
+  appointmentDateInput,
+  appointmentTimeInput,
+  timeSlots
+}) {
+  const appointmentsByDate = new Map(
+    availableDates.map((appointment) => [appointment.date, appointment])
+  );
+
   function clearSelectedTime() {
     appointmentTimeInput.value = "";
     timeSlots.innerHTML = "";
   }
 
   function renderTimes(date) {
-    const times = dateTimes[date] || [];
+    const appointment = appointmentsByDate.get(date);
+    const times = appointment?.timeSlots || [];
     clearSelectedTime();
 
     times.forEach((time) => {
@@ -31,30 +53,50 @@ export function createBookingController({ dateTimes, appointmentDateInput, appoi
     });
   }
 
-  function bindDateSlots() {
-    document.querySelectorAll("#dateSlots .slot").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll("#dateSlots .slot").forEach((slot) => {
+  function renderDateSlots() {
+    dateSlots.innerHTML = "";
+
+    availableDates.forEach((appointment) => {
+      const button = createDateButton(appointment, (selectedButton, selectedAppointment) => {
+        dateSlots.querySelectorAll(".slot").forEach((slot) => {
           slot.classList.remove("active");
         });
 
-        button.classList.add("active");
-        appointmentDateInput.value = button.dataset.date;
-        renderTimes(button.dataset.date);
+        selectedButton.classList.add("active");
+        appointmentDateInput.value = selectedAppointment.label;
+        renderTimes(selectedAppointment.date);
       });
+
+      dateSlots.appendChild(button);
     });
+  }
+
+  function showLoadError(message) {
+    dateSlots.innerHTML = `<p class="hint booking-message">${message}</p>`;
+    clearSelectedTime();
+  }
+
+  function init() {
+    if (!availableDates.length) {
+      showLoadError("No available dates are currently configured.");
+      return;
+    }
+
+    renderDateSlots();
   }
 
   function reset() {
     appointmentDateInput.value = "";
     clearSelectedTime();
-    document.querySelectorAll("#dateSlots .slot").forEach((slot) => {
+
+    dateSlots.querySelectorAll(".slot").forEach((slot) => {
       slot.classList.remove("active");
     });
   }
 
   return {
-    bindDateSlots,
-    reset
+    init,
+    reset,
+    showLoadError
   };
 }
