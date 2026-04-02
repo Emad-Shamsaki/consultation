@@ -37,8 +37,9 @@ Where to create the credentials:
     - `SMTP_HOST=smtp.gmail.com`
     - `SMTP_PORT=587`
     - `SMTP_SECURE=false`
-    - `SMTP_USER=yourgmail@gmail.com`
-    - `SMTP_PASS=your 16-character app password`
+    - `SMTP_USER=emadshamsaki1992@gmail.com`
+    - `SMTP_PASS=chah avoj oard thxr
+
 - `Outlook / Microsoft 365`
   - Use your mailbox login
   - If your account uses MFA, create an app password if your tenant allows it
