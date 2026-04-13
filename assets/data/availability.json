@@ -2,12 +2,12 @@
   "sourceTimezone": "Europe/Rome",
   "availableDates": [
     {
-      "date": "2026-04-11",
-      "timeSlots": ["09:00", "11:00", "14:00"]
+      "date": "2026-04-22",
+      "timeSlots": ["19:00"]
     },
     {
-      "date": "2026-04-17",
-      "timeSlots": ["19:00", "21:00"]
+      "date": "2026-04-28",
+      "timeSlots": [ "20:00"]
     }
   ]
 }
