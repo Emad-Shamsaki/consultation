@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROS, Gazebo and RViz Intro</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="post-shell">
+      <aside class="card post-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>Robotics</h2>
+        <p class="hint">
+          This structure works for robotics notes too, not only embedded control topics.
+        </p>
+
+        <nav class="post-nav" aria-label="Page navigation">
+          <a href="../index.html">Profile</a>
+          <a href="../consultation.html">Consultation</a>
+          <a href="../articles.html">Articles</a>
+          <a href="article-template.html">Template</a>
+        </nav>
+      </aside>
+
+      <div class="post-main">
+        <header class="card post-header" aria-labelledby="articleTitle">
+          <div class="article-shell">
+            <div class="article-eyebrow">ROS2</div>
+            <h1 id="articleTitle" class="article-title">ROS, Gazebo and RViz Intro</h1>
+            <p class="article-dek">
+              An introductory article for understanding simulation, visualization, and how data moves
+              through a ROS2 system.
+            </p>
+
+            <div class="article-byline">
+              <div>Emad Shamsaki</div>
+              <div>Aug 11, 2025 | ROS2 | 5 min read</div>
+            </div>
+          </div>
+        </header>
+
+        <article class="card post-article" aria-label="Article content">
+          <div class="article-shell">
+            <div class="article-body">
+              <p>
+                A useful way to introduce ROS2 is to separate it into three roles: computation,
+                simulation, and visualization. ROS2 nodes run the computation, Gazebo provides the
+                simulated world, and RViz helps inspect what the robot believes about that world.
+              </p>
+
+              <h2>What each tool does</h2>
+              <ul>
+                <li>ROS2 nodes publish, subscribe, and process robot data.</li>
+                <li>Gazebo simulates sensors, physics, and environment interaction.</li>
+                <li>RViz visualizes frames, paths, point clouds, maps, and markers.</li>
+              </ul>
+
+              <h2>Why this matters in practice</h2>
+              <p>
+                When these tools are used together, you can validate logic before hardware is available,
+                which reduces integration risk and makes debugging much faster.
+              </p>
+
+              <pre><code># Example ROS2 topic inspection
+ros2 topic list
+ros2 topic echo /cmd_vel
+ros2 topic hz /odom</code></pre>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

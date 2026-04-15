@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article Title</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="post-shell">
+      <aside class="card post-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>Article template</h2>
+        <p class="hint">
+          Copy this file, rename it, then update the title, subtitle, date, and content. Finally,
+          add the new article link inside <code>articles.html</code>.
+        </p>
+
+        <nav class="post-nav" aria-label="Page navigation">
+          <a href="../index.html">Profile</a>
+          <a href="../consultation.html">Consultation</a>
+          <a href="../articles.html">Articles</a>
+          <a href="article-template.html" aria-current="page">Template</a>
+        </nav>
+      </aside>
+
+      <div class="post-main">
+        <header class="card post-header" aria-labelledby="articleTitle">
+          <div class="article-shell">
+            <div class="article-eyebrow">Article template</div>
+            <h1 id="articleTitle" class="article-title">Write your article title here</h1>
+            <p class="article-dek">
+              Use this line for the short subtitle or summary that appears below the title.
+            </p>
+
+            <div class="article-byline">
+              <div>Emad Shamsaki</div>
+              <div>Month Day, Year | Topic | Estimated read time</div>
+            </div>
+
+            <div class="template-note">
+              <p>
+                Suggested workflow: copy this file, replace the placeholder content, then add one
+                new list item in <code>../articles.html</code> that links to your new file.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <article class="card post-article" aria-label="Article content">
+          <div class="article-shell">
+            <div class="article-body">
+              <h2>Introduction</h2>
+              <p>
+                Start with the problem, context, or engineering objective. Keep the first section
+                practical so readers quickly understand what the article is solving.
+              </p>
+
+              <h2>Code example</h2>
+              <p>
+                Use inline code like <code>spi_transfer()</code> in paragraphs, and use larger
+                blocks for code snippets.
+              </p>
+
+              <pre><code>// Example code block
+int status = spi_transfer(tx_buffer, rx_buffer, transfer_size);
+if (status != 0) {
+  log_error("SPI transfer failed");
+}</code></pre>
+
+              <h2>Formula example</h2>
+              <p>
+                You can add formulas using MathML directly in HTML.
+              </p>
+
+              <div class="formula-block" aria-label="Example formula">
+                <div class="formula-label">Example equation</div>
+                <math display="block">
+                  <mrow>
+                    <mi>y</mi>
+                    <mo>=</mo>
+                    <msub><mi>K</mi><mi>p</mi></msub>
+                    <mi>e</mi>
+                    <mo>+</mo>
+                    <msub><mi>K</mi><mi>i</mi></msub>
+                    <mo>&#x222B;</mo>
+                    <mi>e</mi>
+                    <mi>d</mi>
+                    <mi>t</mi>
+                  </mrow>
+                </math>
+              </div>
+
+              <h2>Conclusion</h2>
+              <p>
+                End with the result, the lesson learned, or a checklist the reader can apply.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

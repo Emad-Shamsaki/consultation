@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAN Bus Basics to Advanced</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="post-shell">
+      <aside class="card post-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>Communication systems</h2>
+        <p class="hint">
+          This page uses the same article layout, so every new post stays visually consistent.
+        </p>
+
+        <nav class="post-nav" aria-label="Page navigation">
+          <a href="../index.html">Profile</a>
+          <a href="../consultation.html">Consultation</a>
+          <a href="../articles.html">Articles</a>
+          <a href="article-template.html">Template</a>
+        </nav>
+      </aside>
+
+      <div class="post-main">
+        <header class="card post-header" aria-labelledby="articleTitle">
+          <div class="article-shell">
+            <div class="article-eyebrow">Communication</div>
+            <h1 id="articleTitle" class="article-title">CAN Bus Basics to Advanced</h1>
+            <p class="article-dek">
+              A compact walkthrough of frames, arbitration, bit timing, filtering, and the debugging
+              habits that help on real systems.
+            </p>
+
+            <div class="article-byline">
+              <div>Emad Shamsaki</div>
+              <div>Sep 2, 2025 | CAN | 7 min read</div>
+            </div>
+          </div>
+        </header>
+
+        <article class="card post-article" aria-label="Article content">
+          <div class="article-shell">
+            <div class="article-body">
+              <p>
+                CAN remains one of the most practical field buses in embedded systems because it combines
+                reliability, robust arbitration, and a straightforward electrical layer. The complexity comes
+                later, when timing margins, filters, or multi-node interactions are not validated carefully.
+              </p>
+
+              <h2>First layer: the frame</h2>
+              <p>
+                Before tuning bit timing, make sure everyone on the team can read one CAN frame correctly:
+                identifier, control field, payload, CRC, acknowledgement, and inter-frame spacing.
+              </p>
+
+              <h2>Second layer: timing</h2>
+              <p>
+                Stable communication depends on correct baud rate, sample point, oscillator tolerance, cable length,
+                and termination. Many field issues that look like software bugs turn out to be timing or physical-layer
+                problems.
+              </p>
+
+              <div class="formula-block" aria-label="Bus load estimate">
+                <div class="formula-label">Simple bus-load estimate</div>
+                <math display="block">
+                  <mrow>
+                    <mi>Load</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                      <mrow>
+                        <mi>FramesPerSecond</mi>
+                        <mo>&#x00D7;</mo>
+                        <mi>BitsPerFrame</mi>
+                      </mrow>
+                      <mi>BitRate</mi>
+                    </mfrac>
+                  </mrow>
+                </math>
+              </div>
+
+              <h2>Third layer: debugging</h2>
+              <ul>
+                <li>Check bus termination before changing firmware.</li>
+                <li>Measure error counters when nodes enter error passive or bus off.</li>
+                <li>Verify acceptance filters before assuming a transmit issue.</li>
+                <li>Log timestamps when latency matters.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

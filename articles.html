@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical Notes</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="pub-shell">
+      <aside class="card pub-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>Articles and engineering write-ups.</h2>
+        <p class="hint">
+          Each article lives in the <code>articles/</code> folder as its own HTML file.
+          To add a new one, create a file there and then add one more item in this list.
+        </p>
+
+        <nav class="pub-nav" aria-label="Page navigation">
+          <a href="index.html">Profile</a>
+          <a href="consultation.html">Consultation</a>
+          <a href="articles.html" aria-current="page">Articles</a>
+          <a href="articles/article-template.html">Article template</a>
+        </nav>
+      </aside>
+
+      <div class="pub-main">
+        <section class="card pub-header" aria-labelledby="articlesTitle">
+          <span class="small-label">Publication</span>
+          <h1 id="articlesTitle">Technical notes in a Medium-style article list.</h1>
+          <p>
+            Click any entry to open a separate article page. The left sidebar stays simple, and the
+            main column is focused on readable titles, excerpts, and publish dates.
+          </p>
+        </section>
+
+        <section class="card pub-list" aria-label="Article list">
+          <a class="pub-entry" href="articles/ksz8851snl-registers.html">
+            <div class="pub-entry-copy">
+              <div class="pub-meta">Registers | Embedded Ethernet</div>
+              <h2>KSZ8851SNL Registers</h2>
+              <p>How to build the command to send, decode register fields, and avoid common SPI framing mistakes.</p>
+              <div class="pub-date">Sep 9, 2025</div>
+            </div>
+            <div class="pub-thumb">
+              <div class="pub-thumb-label">SPI Register Map</div>
+            </div>
+          </a>
+
+          <a class="pub-entry" href="articles/object-dictionary-sdo-pdo.html">
+            <div class="pub-entry-copy">
+              <div class="pub-meta">Industrial automation | CANopen</div>
+              <h2>Demystifying the Object Dictionary, SDO, and PDO in Industrial Automation</h2>
+              <p>Understand how sensors, drives, PLCs, and controllers exchange data and why each CANopen object matters.</p>
+              <div class="pub-date">Sep 2, 2025</div>
+            </div>
+            <div class="pub-thumb">
+              <div class="pub-thumb-label">CANopen Objects</div>
+            </div>
+          </a>
+
+          <a class="pub-entry" href="articles/can-bus-basics-to-advanced.html">
+            <div class="pub-entry-copy">
+              <div class="pub-meta">Communication | CAN</div>
+              <h2>CAN Bus Basics to Advanced</h2>
+              <p>From frame layout and arbitration to practical debugging, filtering, timing, and field reliability.</p>
+              <div class="pub-date">Sep 2, 2025</div>
+            </div>
+            <div class="pub-thumb">
+              <div class="pub-thumb-label">CAN Frame</div>
+            </div>
+          </a>
+
+          <a class="pub-entry" href="articles/ros-gazebo-rviz-intro.html">
+            <div class="pub-entry-copy">
+              <div class="pub-meta">Robotics | ROS2</div>
+              <h2>ROS, Gazebo and RViz Intro</h2>
+              <p>A compact introduction to simulation, visualization, nodes, topics, and the workflow for testing robotic systems.</p>
+              <div class="pub-date">Aug 11, 2025</div>
+            </div>
+            <div class="pub-thumb">
+              <div class="pub-thumb-label">ROS Graph</div>
+            </div>
+          </a>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

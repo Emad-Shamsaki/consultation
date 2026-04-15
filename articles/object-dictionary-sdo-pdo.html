@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demystifying the Object Dictionary, SDO, and PDO</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="post-shell">
+      <aside class="card post-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>Industrial automation</h2>
+        <p class="hint">
+          The left sidebar stays consistent across the publication pages so the site still feels connected.
+        </p>
+
+        <nav class="post-nav" aria-label="Page navigation">
+          <a href="../index.html">Profile</a>
+          <a href="../consultation.html">Consultation</a>
+          <a href="../articles.html">Articles</a>
+          <a href="article-template.html">Template</a>
+        </nav>
+      </aside>
+
+      <div class="post-main">
+        <header class="card post-header" aria-labelledby="articleTitle">
+          <div class="article-shell">
+            <div class="article-eyebrow">CANopen</div>
+            <h1 id="articleTitle" class="article-title">
+              Demystifying the Object Dictionary, SDO, and PDO in Industrial Automation
+            </h1>
+            <p class="article-dek">
+              A practical explanation of what each object does and how devices exchange configuration
+              values and process data in a CANopen network.
+            </p>
+
+            <div class="article-byline">
+              <div>Emad Shamsaki</div>
+              <div>Sep 2, 2025 | CANopen | 8 min read</div>
+            </div>
+          </div>
+        </header>
+
+        <article class="card post-article" aria-label="Article content">
+          <div class="article-shell">
+            <div class="article-body">
+              <p>
+                Many CANopen systems feel difficult at first because three ideas are introduced at the same time:
+                the object dictionary, SDO transfers, and PDO mapping. Once these are separated, the behavior becomes
+                much easier to reason about.
+              </p>
+
+              <h2>Object dictionary</h2>
+              <p>
+                The object dictionary is the structured memory map of the device. Every configuration value,
+                measured variable, and status field is given an index and subindex. That means communication is
+                not built around raw addresses but around well-defined data objects.
+              </p>
+
+              <h2>SDO vs PDO</h2>
+              <p>
+                Use SDO when you need to read or write configuration data. Use PDO when you need regular real-time
+                exchange of operational data such as setpoints, states, or measurements.
+              </p>
+
+              <div class="article-callout">
+                <p>
+                  A good mental model is simple: SDO is for configuration and inspection, PDO is for live traffic.
+                </p>
+              </div>
+
+              <h2>Typical integration sequence</h2>
+              <ol>
+                <li>Read the EDS or device manual and identify the required objects.</li>
+                <li>Configure parameters with SDO.</li>
+                <li>Map the required process signals into PDOs.</li>
+                <li>Verify timing and state transitions during startup.</li>
+              </ol>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
