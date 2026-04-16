@@ -121,6 +121,16 @@ if (status != 0) {
               <p>
                 End with the result, the lesson learned, or a checklist the reader can apply.
               </p>
+
+               <h2>What usually goes wrong</h2>
+              <ul>
+                <li>The register address is shifted incorrectly.</li>
+                <li>The byte-enable bits do not match the accessed register width.</li>
+                <li>Chip select timing does not follow the controller requirements.</li>
+                <li>Endian assumptions change how command bytes are placed on the wire.</li>
+              </ul>
+
+              
             </div>
           </div>
         </article>
