@@ -34,6 +34,7 @@
 
           <div class="actions">
             <a class="btn btn-primary btn-link" href="consultation.html">Start consultation</a>
+            <a class="btn btn-secondary btn-link" href="articles.html">Read technical notes</a>
             <a href="#aboutSection" class="btn btn-secondary btn-link">About me</a>
           </div>
         </div>
@@ -130,6 +131,45 @@
           </div>
         </section>
       </div>
+
+      <section class="card section editorial-preview" aria-labelledby="notesTitle">
+        <div class="section-heading">
+          <div>
+            <span class="small-label">Technical notes</span>
+            <h2 id="notesTitle">Control methods, solved issues, and engineering write-ups.</h2>
+          </div>
+          <a class="btn btn-secondary btn-link" href="articles.html">Open articles page</a>
+        </div>
+
+        <div class="editorial-grid">
+          <article class="editorial-card">
+            <div class="editorial-meta">Control methods</div>
+            <h3>Controller structure, tuning choices, and implementation notes.</h3>
+            <p>
+              Publish articles about PID loops, cascaded control, current regulation, filtering,
+              anti-windup, and embedded implementation tradeoffs.
+            </p>
+          </article>
+
+          <article class="editorial-card">
+            <div class="editorial-meta">Solved issues</div>
+            <h3>Real debugging stories from boards, drivers, and field systems.</h3>
+            <p>
+              Document hard problems such as unstable feedback loops, bus timing issues, driver
+              bring-up, and integration failures with a clear before-and-after explanation.
+            </p>
+          </article>
+
+          <article class="editorial-card">
+            <div class="editorial-meta">Practical notes</div>
+            <h3>Code, formulas, plots, and implementation snippets in one place.</h3>
+            <p>
+              The layout is ready for long-form notes, code blocks, equations, and compact
+              technical references without needing a separate CMS.
+            </p>
+          </article>
+        </div>
+      </section>
     </main>
   </div>
 </body>
