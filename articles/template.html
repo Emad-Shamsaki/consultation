@@ -91,6 +91,32 @@ if (status != 0) {
                 </math>
               </div>
 
+              <h2>Photo in the middle of the article</h2>
+              <p>
+                If you want to place a photo between paragraphs, use a <code>figure</code> block like
+                this and only change the image path and caption text.
+              </p>
+
+              <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/article-placeholder.svg"
+                  alt="Describe the photo here"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Example caption: explain what the reader should notice in this image.
+                </figcaption>
+              </figure>
+
+              <pre><code>&lt;figure class="article-figure"&gt;
+  &lt;img
+    src="../assets/images/articles/my-photo.jpg"
+    alt="Describe the photo here"
+    class="article-inline-image"
+  /&gt;
+  &lt;figcaption&gt;Write a short caption here.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
               <h2>Conclusion</h2>
               <p>
                 End with the result, the lesson learned, or a checklist the reader can apply.

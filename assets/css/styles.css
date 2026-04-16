@@ -870,6 +870,7 @@ textarea {
 .article-body ol,
 .article-body blockquote,
 .article-body .formula-block,
+.article-body .article-figure,
 .article-body pre,
 .article-body .article-callout {
   margin-top: 24px;
@@ -971,6 +972,28 @@ textarea {
   border-left: 3px solid rgba(37, 99, 235, 0.3);
   color: #334155;
   font-style: italic;
+}
+
+.article-figure {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.article-inline-image {
+  width: 100%;
+  display: block;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  object-fit: cover;
+  background: #f8fafc;
+}
+
+.article-figure figcaption {
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-align: center;
 }
 
 .article-footer {
