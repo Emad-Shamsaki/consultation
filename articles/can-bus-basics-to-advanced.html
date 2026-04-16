@@ -11,7 +11,7 @@
     <main class="post-shell">
       <aside class="card post-sidebar">
         <span class="small-label">Technical notes</span>
-        <h2>Communication systems</h2>
+        <h2>CAN Protocol</h2>
         <p class="hint">
           This page uses the same article layout, so every new post stays visually consistent.
         </p>
@@ -26,7 +26,7 @@
       <div class="post-main">
         <header class="card post-header" aria-labelledby="articleTitle">
           <div class="article-shell">
-            <div class="article-eyebrow">Communication</div>
+            <div class="article-eyebrow">CAN Protocol</div>
             <h1 id="articleTitle" class="article-title">CAN Bus Basics to Advanced</h1>
             <p class="article-dek">
               A compact walkthrough of frames, arbitration, bit timing, filtering, and the debugging
@@ -35,7 +35,7 @@
 
             <div class="article-byline">
               <div>Emad Shamsaki</div>
-              <div>Sep 2, 2025 | CAN | 7 min read</div>
+              <div>Sep 2, 2025 | CAN Protocol | 7 min read</div>
             </div>
           </div>
         </header>
@@ -44,49 +44,72 @@
           <div class="article-shell">
             <div class="article-body">
               <p>
-                CAN remains one of the most practical field buses in embedded systems because it combines
-                reliability, robust arbitration, and a straightforward electrical layer. The complexity comes
-                later, when timing margins, filters, or multi-node interactions are not validated carefully.
+                The CAN protocol (Controller Area Network) is a robust serial communication protocol primarily designed for real-time, 
+                reliable data exchange between multiple electronic control units (ECUs) in embedded systems. It was originally developed 
+                by Bosch in the 1980s for use in the automotive industry, but it is now widely used in industrial automation, robotics, aerospace, 
+                and medical devices as well.
+                The CAN bus uses twisted-pair wiring (CAN_H and CAN_L) mainly for signal integrity and noise immunity.
               </p>
+              
+              <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_STl61cn0rNKo9bcxSrNSUA.webp"
+                  alt="Twisted-pair wiring for CAN bus"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  twisted-pair wiring
+                </figcaption>
+              </figure>
+              
+            <p> 
+            Unlike normal digital communication (where logic 0 = low voltage and logic 1 = high voltage), 
+            CAN uses dominant and recessive bits with differential signaling.
+            </p>
 
-              <h2>First layer: the frame</h2>
-              <p>
-                Before tuning bit timing, make sure everyone on the team can read one CAN frame correctly:
-                identifier, control field, payload, CRC, acknowledgement, and inter-frame spacing.
-              </p>
 
-              <h2>Second layer: timing</h2>
-              <p>
-                Stable communication depends on correct baud rate, sample point, oscillator tolerance, cable length,
-                and termination. Many field issues that look like software bugs turn out to be timing or physical-layer
-                problems.
-              </p>
-
-              <div class="formula-block" aria-label="Bus load estimate">
-                <div class="formula-label">Simple bus-load estimate</div>
-                <math display="block">
-                  <mrow>
-                    <mi>Load</mi>
-                    <mo>=</mo>
-                    <mfrac>
-                      <mrow>
-                        <mi>FramesPerSecond</mi>
-                        <mo>&#x00D7;</mo>
-                        <mi>BitsPerFrame</mi>
-                      </mrow>
-                      <mi>BitRate</mi>
-                    </mfrac>
-                  </mrow>
-                </math>
-              </div>
-
-              <h2>Third layer: debugging</h2>
+              <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_U4atGDUTr8V0ihPWw4be6A.webp"
+                  alt="Dominant VS Recessive Bit"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Dominant VS Recessive Bit
+                </figcaption>
+              </figure>
+              
+              <p> So, in CAN:</p>
               <ul>
-                <li>Check bus termination before changing firmware.</li>
-                <li>Measure error counters when nodes enter error passive or bus off.</li>
-                <li>Verify acceptance filters before assuming a transmit issue.</li>
-                <li>Log timestamps when latency matters.</li>
+                <li>Logic 0 = Dominant (strong, wins)</li>
+                <li>Logic 1 = Recessive (weak, can be overridden)</li>
               </ul>
+
+            <h2>What is a CAN transceiver?</h2>
+              <p>
+                A CAN transceiver is the physical layer interface between the CAN controller 
+                (inside the microcontroller/ECU) and the CAN bus (the twisted pair wires: CAN_H & CAN_L).
+              </p>
+              <p>
+                It converts digital logic signals from the controller into the differential voltages required on the bus — and vice versa.
+              </p>
+              
+              <p>
+                Microcontrollers usually work at 3.3 V or 5 V TTL logic. But CAN bus works with differential signaling 
+                (~1.5 V — 3.5 V between CAN_H and CAN_L). The transceiver translates between these domains.
+              </p>
+              
+              <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_AUgX9FrvtGzBUebZ8vBZTw.webp"
+                  alt="CAN transceiver"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  CAN tranceiver
+                </figcaption>
+              </figure>
+
             </div>
           </div>
         </article>
