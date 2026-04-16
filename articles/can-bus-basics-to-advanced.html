@@ -106,9 +106,170 @@
                   class="article-inline-image"
                 />
                 <figcaption>
-                  CAN tranceiver
+                  CAN transceiver
                 </figcaption>
               </figure>
+
+            <h2>  Standard CAN Topology </h2>
+            <p> 
+              Bus Topology (Recommended): All nodes are connected to a two-wire twisted pair (CAN_H & CAN_L). 
+              The bus must be terminated with 120 Ω resistors at both ends (to prevent signal reflections). 
+              Nodes connect to the bus via short “stubs.” Works best for high-speed CAN (ISO 11898-2, up to 1 Mbps / CAN FD up to 5-8 Mbps). 
+              The important Rules are:
+            </p>
+            
+            <p>Termination:</p>
+            <ul>
+              <li>Always place 120 Ω resistors at both ends of the main bus.</li>
+              <li>Effective resistance of the bus = ~60 Ω (since 2 × 120 Ω in parallel).</li>
+            </ul>
+
+            <p>Stub Length:</p>
+            <ul>
+              <li>Keep short (< 30 cm for high-speed CAN).</li>
+              <li>Longer stubs = more reflections = communication errors.</li>
+            </ul>
+
+            <p>Cable Length vs Speed:</p>
+            <ul>
+              <li>At 1 Mbps → Max bus length ≈ 40 m.</li>
+              <li>At 125 kbps → Max bus length ≈ 500 m.</li>
+              <li>At 50 kbps → Can go up to 1 km+.</li>
+            </ul>
+              
+            <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_PG2d9UALJqUUqz-brtuS8w.webp"
+                  alt="Bus Topology"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Bus Topology
+                </figcaption>
+            </figure>
+
+          <p>CAN properties: Wired, Serial, Asynchronous, BroadCast, 
+            Half Duplex, Ack method, Message Based Protocol, Message Filtering, CSMA-CA (collision avoidance)
+          </p>
+
+          <h2>Types of CAN Frames</h2>
+          <p>There are 4 types of frames in Classical CAN:</p>
+          <ul>  
+            <li>Data Frame → Used to transmit actual data (most common).</li>
+            <li>Remote Frame → Requests data from another node.</li>
+            <li>Error Frame → Signals error detection on the bus.</li>
+            <li>Overload Frame → Used to inject a delay between data/remote frames if a node is overloaded.</li>
+          </ul>
+
+          <h2>Structure of a CAN Data Frame</h2>
+          
+                      
+          <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_pSWrFkeNjuXMhxQU_HvE3Q.webp"
+                  alt="structure of CAN data frame"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Structure of CAN Data Frame
+                </figcaption>
+            </figure>
+
+            <h2>1. Start of Frame (SOF) → 1 bit</h2>
+            <ul>
+              <li>Always dominant (0).</li>
+              <li>Marks the beginning of a frame and syncs all nodes.</li>
+            </ul>
+
+            <h2>2. Arbitration Field</h2>
+            <ul>
+              <li>Standard CAN (11-bit ID): 12 bits</li>
+              <li>Extended CAN (29-bit ID): 32 bits</li>
+              <li>Contains the Message Identifier (priority of message).</li>
+              <li>Also includes RTR bit (0 = data frame, 1 = remote request).</li>
+              <li>Arbitration ensures that the lowest ID (highest priority) wins if multiple nodes transmit.</li>
+            </ul>
+            <h2>3. Control Field → 6 bits</h2>
+            <ul>
+              <li>Contains the Data Length Code (DLC) indicating the number of data bytes (0-8 for Classical CAN).</li>
+              <li>Includes other control bits depending on the frame type.</li>
+            </ul>
+
+            <h2>4. Data Field → 0–64 bits (0–8 bytes)</h2>
+            <ul>
+              <li>Actual payload data.</li>
+              <li>Sent MSB first.</li>
+              <li>CAN FD allows 0–64 bytes.</li>
+            </ul>
+            <h2>5. CRC Field → 16 bits</h2>
+            <ul>
+              <li>15-bit CRC sequence + 1-bit CRC delimiter.</li>
+              <li>Used for error detection (receiver checks integrity).</li>
+            </ul>
+            <h2>6. ACK Field → 2 bits</h2>
+            <ul>
+              <li>ACK Slot (1 bit): Sender sends recessive, receiver overwrites with dominant if frame is valid.</li>
+              <li>ACK Delimiter (1 bit): Always recessive.</li>
+              <li>Ensures at least one node acknowledged the message.</li>
+            </ul>
+            <h2>7. End of Frame (EOF) → 7 bits</h2>
+            <ul>
+              <li>All recessive (1).</li>
+              <li>Marks the end of the frame.</li>
+            </ul>
+
+            <h2>Example</h2>
+            <p>We want to send an SDO message to Beckhoff CAN module to turn on the first digital output. Here is the reference for the documentation of this module: <a href="https://www.e-motionsupply.com/v/750-337.pdf">Beckhoff CAN Module Documentation</a></p>
+
+            <p>Based on this documentation, the index of the digital output block is 6200. The sub index 01 is the first digital output block. To turn on the first bit, we have to make 1 the LSB of the data frame.</p>
+
+            <p>If the node id of the CAN module is 0x10, we have:</p>
+
+            <p>610#2f 0062 01 01 00 00 00</p>
+
+            <p>600 + node id in hexadecimal: 610 in arbitration field</p>
+
+            <p>2f: write message in control data field</p>
+
+            <p>Others are the data field: LSB: 00 62 01 01 00 00 00: MSB</p>
+            <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_jfru_0wU6IsV2UgJ2pBp5w.webp"
+                  alt="summary for control field data commands"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  summary for control field data commands
+                </figcaption>
+            </figure>
+
+
+            <h2>Response</h2>
+            <p>The response id is 0x580+Node Id. So here the response starts with 590 
+              (because the node id was 0x10). If the message abort, the first bytes in the response is 80. 
+              So if you see the following message, means your request is aborted: 0x590#80 xx xx.</p>
+
+            <h2>Network Management (NMT) service in CAN</h2>
+            <p>NMT is one of the core CANopen communication services, used to control the state of all CANopen devices (nodes) 
+              on the network. It provides a way for a master (NMT master) to control the operating state of other devices (NMT slaves). 
+              Used for starting, stopping, resetting nodes, or putting them into pre-operational mode.</p>
+
+            <p>NMT Message Format: CAN ID (fixed to 0x000) + Command Specifier (1 Byte) + Node ID (1 Byte).</p>
+
+            <p>Example: cansend can0 000#0108</p>
+
+            <p>Means: 01: start remote node (go to operational mode), 08: the slave with node 0x08.</p>
+
+            <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/1_ieMGyjmtvsxyi0Xpy1ODhg.webp"
+                  alt="Summary for Command Specifier"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Summary for Command Specifier
+                </figcaption>
+            </figure>
 
             </div>
           </div>
