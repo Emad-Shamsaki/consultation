@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Object Dictionary</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+    <div class="container pub-page">
+            <main class="post-shell">
+                  
+                <aside class="card post-sidebar">
+                    <span class="small-label">Technical notes</span>
+                    <h2>Object Dictionary</h2>
+
+                    <nav class="post-nav" aria-label="Page navigation">
+                    <a href="../index.html">Profile</a>
+                    <a href="../consultation.html">Consultation</a>
+                    <a href="../articles.html">Articles</a>
+                    </nav>
+                </aside>
+                
+                <div class="post-main">
+                    <header class="card post-header" aria-labelledby="articleTitle">
+                    <div class="article-shell">
+                        <div class="article-eyebrow">Object Dictionary</div>
+                        <h1 id="articleTitle" class="article-title">Object Dictionary</h1>
+                        <p class="article-dek">
+                        Understanding the Object Dictionary, SDOs, and PDOs in industrial automation systems.
+                        </p>
+
+                        <div class="article-byline">
+                        <div>Emad Shamsaki</div>
+                        <div>April 17, 2026 | Object Dictionary | 3 min read</div>
+                        </div>
+                    </div>
+                    </header>
+
+                    
+                    <article class="card post-article" aria-label="Article content">
+                        <div class="article-shell">
+                        <div class="article-body">
+
+                        
+                        
+                        
+               
+                        <p> 
+                            Industrial automation systems rely on efficient communication between devices — sensors, 
+                            drives, PLCs, and controllers must continuously share configuration data and real-time process 
+                            values. One of the most widely used communication standards for this is CANopen, 
+                            a protocol built on the CAN (Controller Area Network) bus.
+                        </p>
+               
+               
+                        <p>
+                            If you've ever worked with CANopen, you've probably heard terms like Object Dictionary,
+                             SDO, and PDO. In this article, we'll
+                             break these concepts down into plain language.
+                        </p>
+                        
+               
+
+                        <h2>The Object Dictionary: The Device's Blueprint</h2>
+                        
+                        <p>At the heart of every CANopen device is the Object Dictionary (OD).</p>
+
+                        
+                        
+                        <p>Think of it as a catalog of parameters that defines everything the device knows and can do.</p>
+
+                        
+                        
+                        <p>Each parameter has an index (like an address in memory).</p>
+
+                        
+                        
+                        <p>Some entries have sub-indices if multiple elements are grouped together.</p>
+
+                        
+                        
+                        <p>Each entry has a data type (integer, float, Boolean, etc.) and access rights 
+                            (read-only, write-only, or read/write).</p>
+
+                        
+                        
+                        <p>The OD is what makes devices interoperable: 
+                            a PLC or engineering tool can look at the OD and instantly know what parameters are available.</p>
+               
+                                        
+                <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/object dictionary/1_UCwtbeSE9UmeMqUGp3ayIQ.webp"
+                  alt="Example: Motor Drive Object Dictionary"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Example: Motor Drive Object Dictionary
+                </figcaption>
+              </figure>
+
+                        <p>Here you can see both configuration entries (like heartbeat time) and process data entries (like actual velocity).</p>
+
+                        <h2>SDO: Service Data Object</h2>
+                        <p>The SDO is the “configuration channel” for CANopen devices. It follows a client/server model: 
+                            one device requests, the other responds. It allows reading or writing to the Object Dictionary. 
+                            Any parameter can be accessed, regardless of size.</p>
+
+                     <p>Example: Setting a motor's acceleration limit via SDO.</p>
+
+
+                        <pre><code>PLC → Drive: “Write 0x6083 (Acceleration) = 1000 rpm/s”
+Drive → PLC: “Confirmed.”</code></pre>
+               
+               <p>SDOs are mostly used during startup, commissioning, or diagnostics.</p>
+
+
+               <h2>PDO: Process Data Object</h2>
+               <p>The PDO is the “real-time channel.” It has been designed for speed and efficiency. PDO can transmit up to 8 bytes of process data in a single CAN frame. Data is sent cyclically (on a timer) or event-driven (when a condition changes). There is no request/response (PDOs are simply broadcast for any node to consume.)</p>
+
+               <p>Example: A drive continuously broadcasting its speed and torque every 10 ms. PDOs are mapped to Object Dictionary entries. For instance, Actual Velocity (0x606C) and Torque could be packed into one PDO and sent out periodically.</p>
+
+               <p>For more information check the link for CAN basic to advanced.</p>
+
+               <p>Summary for General SDOs to identify the device</p>
+               
+               
+                <figure class="article-figure">
+                <img
+                  src="../assets/images/articles/object dictionary/1_Mgv_o-TuWMW91slntjjHrw.webp"
+                  alt="Summary for General SDOs to identify the device"
+                  class="article-inline-image"
+                />
+                <figcaption>
+                  Summary for General SDOs to idetify the device
+                </figcaption>
+              </figure>
+               
+               <p>Example of usage: Suppose the device id is 0x08:</p>
+
+<p>request for device type: 608#40 00 10 00 00 00 00 00</p>
+
+<p>response: 588#43 00 10 00 2D 01 00 00</p>
+
+<p>meaning that the device type is 0000012D which is cia-301 basic device.</p>
+               
+               
+                        </div>
+                        </div>            
+                    </article>
+                </div>
+            </main>
+    </div>
+</body>
+
+
+
+</html>
