@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Understanding CPU Architectures in Embedded Systems</title>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <div class="container pub-page">
+    <main class="post-shell">
+      <aside class="card post-sidebar">
+        <span class="small-label">Technical notes</span>
+        <h2>CPU Architectures</h2>
+
+        <nav class="post-nav" aria-label="Page navigation">
+          <a href="../index.html">Profile</a>
+          <a href="../consultation.html">Consultation</a>
+          <a href="../articles.html">Articles</a>
+        </nav>
+      </aside>
+
+      <div class="post-main">
+        <header class="card post-header" aria-labelledby="articleTitle">
+          <div class="article-shell">
+            <div class="article-eyebrow">Embedded Systems</div>
+            <h1 id="articleTitle" class="article-title">Understanding CPU Architectures in Embedded Systems</h1>
+            <p class="article-dek">
+              A practical introduction to ARM, x86, and RISC-V, and why CPU architecture matters in STM32-based development.
+            </p>
+
+            <div class="article-byline">
+              <div>Emad Shamsaki</div>
+              <div>April 20, 2026 | Embedded Systems | 4 min read</div>
+            </div>
+          </div>
+        </header>
+
+        <article class="card post-article" aria-label="Article content">
+          <div class="article-shell">
+            <div class="article-body">
+              <p>
+                When working with embedded systems, especially platforms like STM32, one of the
+                foundational concepts is CPU architecture. It can feel abstract at first, but once
+                you understand it, many design choices start to make more sense: why chips behave
+                differently, how software is built, and what trade-offs exist between performance,
+                efficiency, and complexity.
+              </p>
+
+              <h2>What Is a CPU Architecture?</h2>
+              <p>
+                A CPU architecture defines how a processor works at its most fundamental level. It
+                determines the instruction set, the structure of registers, how memory is accessed,
+                and how instructions are executed internally.
+              </p>
+              <p>
+                In simple terms, architecture is the rulebook that both hardware and software must
+                follow.
+              </p>
+
+              <h2>Major CPU Architectures</h2>
+              <h3>ARM Architecture</h3>
+              <p>
+                ARM is the most widely used architecture in embedded systems. It is based on RISC,
+                or Reduced Instruction Set Computing, and is known for low power consumption,
+                compact design, and excellent efficiency.
+              </p>
+              <p>
+                Typical ARM-based systems include microcontrollers such as STM32 using Cortex-M
+                cores, smartphones using Cortex-A, and a wide range of IoT devices. In STM32-based
+                projects, you are working inside the ARM Cortex-M family, which is specifically
+                tuned for real-time control and embedded applications.
+              </p>
+
+              <h3>x86 Architecture</h3>
+              <p>
+                x86 is the dominant architecture in personal computers and servers. It is based on
+                CISC, or Complex Instruction Set Computing, and emphasizes high performance and
+                strong backward compatibility.
+              </p>
+              <p>
+                That power comes with more complexity and typically higher power consumption, which
+                is why x86 is rarely used in microcontrollers and small embedded control systems.
+              </p>
+
+              <h3>RISC-V Architecture</h3>
+              <p>
+                RISC-V is a newer open-standard architecture that is gaining attention in embedded
+                systems. Its instruction set is open, modular, and customizable, which makes it
+                attractive for research, custom hardware, and a growing number of modern
+                microcontrollers.
+              </p>
+              <p>
+                It offers a lot of flexibility, but compared with ARM it still has a less mature
+                ecosystem in many real-world embedded workflows.
+              </p>
+
+              <h2>Architecture Comparison Table</h2>
+              <p>
+                The table below gives a quick view of the architecture name, well-known series, and
+                the kinds of systems where each one is commonly used.
+              </p>
+
+              <div class="article-table-wrap">
+                <table class="article-table">
+                  <thead>
+                    <tr>
+                      <th>Architecture</th>
+                      <th>Important Series</th>
+                      <th>Important Usage of Each Series</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ARM</td>
+                      <td>Cortex-M, Cortex-A, Cortex-R</td>
+                      <td>
+                        Cortex-M: microcontrollers, STM32 boards, low-power embedded control.<br />
+                        Cortex-A: smartphones, Linux-capable embedded systems, application processors.<br />
+                        Cortex-R: safety-focused and real-time systems such as motor control, storage, and automotive controllers.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>x86</td>
+                      <td>Intel Core, Intel Xeon, AMD Ryzen, AMD EPYC</td>
+                      <td>
+                        Intel Core: consumer desktops and laptops.<br />
+                        Intel Xeon: enterprise servers and professional workstations.<br />
+                        AMD Ryzen: consumer desktops, laptops, and development machines.<br />
+                        AMD EPYC: high-core-count servers, cloud systems, and data centers.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>RISC-V</td>
+                      <td>RV32I, RV64I, SiFive cores, ESP32-C series</td>
+                      <td>
+                        RV32I: small 32-bit embedded controllers and teaching platforms.<br />
+                        RV64I: 64-bit systems, more capable embedded computers, and research platforms.<br />
+                        SiFive cores: commercial RISC-V SoCs and custom hardware development.<br />
+                        ESP32-C series: low-cost IoT nodes, wireless embedded devices, and connected sensors.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h2>Key Differences Between Architectures</h2>
+              <h3>Instruction Set</h3>
+              <p>
+                Each architecture has its own machine language. ARM instructions are different from
+                x86 instructions, and software compiled for one architecture cannot run directly on
+                another. That is why binaries are always built for a specific target.
+              </p>
+
+              <h3>Performance vs Power Efficiency</h3>
+              <p>
+                ARM is usually optimized for efficiency and low power, x86 is usually optimized for
+                raw performance, and RISC-V depends heavily on the implementation. In embedded
+                systems, power efficiency and predictable timing often matter more than peak
+                throughput.
+              </p>
+
+              <h3>Complexity</h3>
+              <p>
+                x86 is feature-rich and legacy-heavy, ARM is comparatively cleaner and simpler, and
+                RISC-V is intentionally minimal and modular. Simpler architectures are often easier
+                to integrate into deterministic real-time systems.
+              </p>
+
+              <h3>Ecosystem and Tooling</h3>
+              <p>
+                ARM has a very mature embedded ecosystem, x86 dominates general-purpose computing,
+                and RISC-V is still developing its tools and support base. In embedded development,
+                stable tooling is often just as important as raw CPU capability.
+              </p>
+
+          
+
+              <h2>Why Architecture Matters in Embedded Systems</h2>
+              <p>
+                In practice, architecture affects compiler output, interrupt latency, power
+                consumption, software portability, and the development tools available to your
+                project.
+              </p>
+              <p>
+                Even so, in many embedded projects the architecture has already been chosen for you
+                by the hardware platform. Most of the engineering effort then moves to how you use
+                that platform well.
+              </p>
+
+              <h2>The Case of STM32</h2>
+              <p>
+                STM32 microcontrollers are based on ARM Cortex-M cores, which are specifically
+                designed for deterministic behavior, low power consumption, and real-time control.
+              </p>
+              <p>
+                For an STM32 project, that means the CPU architecture is already decided. Your real
+                design choices usually sit elsewhere: firmware architecture, RTOS selection such as
+                FreeRTOS or Zephyr, peripheral control, and how you structure timing-critical code.
+              </p>
+
+              <h2>A Simple Way to Think About It</h2>
+              <p><strong>Architecture</strong> is the CPU's language.</p>
+              <p><strong>Microcontroller</strong> such as STM32 is the hardware implementation.</p>
+              <p><strong>RTOS and firmware</strong> are the software layers running on top.</p>
+
+              <h2>Conclusion</h2>
+              <p>
+                CPU architectures define how processors operate, how software is compiled, and what
+                trade-offs exist between performance, power, and complexity.
+              </p>
+              <p>
+                In embedded systems, ARM dominates because of its efficiency and maturity, x86
+                remains focused on high-performance computing, and RISC-V is an emerging alternative
+                with strong long-term potential.
+              </p>
+              <p>
+                For STM32-based development, you are already in the ARM world. The more important
+                project decisions are usually not about changing the architecture, but about how you
+                design and structure the firmware that runs on top of it.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
